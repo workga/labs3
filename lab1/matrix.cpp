@@ -63,7 +63,7 @@ Matrix LibMatrix::input() {
 				}
 			}
 
-			// Copy values from zero to matrix's row
+			// Copy values from buffer to matrix's row
 			m.rows[i].len = count;
 			m.rows[i].items = new Item[count];
 			for (int k = 0; k < count; k++) {
@@ -76,7 +76,6 @@ Matrix LibMatrix::input() {
 		delete[] buf;
 		throw;
 	}
-	// Don't catch eof exception here
 
 
 	delete[] buf;
@@ -84,8 +83,21 @@ Matrix LibMatrix::input() {
 }
 
 
-void LibMatrix::output(const char* msg, const Matrix& m) {
+void LibMatrix::output(const char* msg, const Matrix& m, bool verbose) {
 	std::cout << msg << std::endl;
+
+	if (!verbose) {
+		for (int i = 0; i < m.size; i++) {
+			Row row = m.rows[i];
+			for (int j = 0; j < row.len; j++) {
+				Item item = row.items[j];
+				std::printf("(%d, %d) : %f\n", i, m.rows[i].items[j].column, m.rows[i].items[j].value);
+			}
+		}
+		return;
+	}
+
+
 	for (int i = 0; i < m.size; i++) {
 		Row row = m.rows[i];
 

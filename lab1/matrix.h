@@ -21,7 +21,7 @@ namespace LibMatrix {
 	void	remove(Matrix& m);
 
 	Matrix  input();
-	void	output(const char* msg, const Matrix& m);
+	void	output(const char* msg, const Matrix& m, bool verbose = false);
 
 	void	process(Matrix& m);
 

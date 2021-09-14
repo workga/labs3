@@ -1,6 +1,8 @@
 // Ask about:
 // 1) tempaltes and files (.h? .tpp?)
 // 2) exceptions
+// 3) file
+// 4) fail() and bad()
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
@@ -40,10 +42,10 @@ int main() {
 		return 1;
 	}
 
-	output("Original matrix:", m);
+	output("Original matrix:", m, true);
 
 	process(m);
-	output("Processed matrix:", m);
+	output("Processed matrix:", m, true);
 
 	remove(m);
 
