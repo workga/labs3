@@ -6,7 +6,7 @@
 
 #include "Hypocycloid.h"
 
-static const double EPSILON = 0.00001;
+const double Hypocycloid::EPSILON = 0.00001;
 
 
 // constructors
