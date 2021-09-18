@@ -1,9 +1,3 @@
-// Ask about:
-// 1) tempaltes and files (.h? .tpp?)
-// 2) exceptions
-// 3) file
-// 4) fail() and bad()
-
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
@@ -13,7 +7,7 @@
 #include <exception>
 #include "matrix.h"
 
-#define TEST_MODE true
+#define TEST_MODE false
 
 using namespace LibMatrix;
 
