@@ -7,6 +7,7 @@ typedef struct Point {
 
 class Hypocycloid {
 public:
+	static const double EPSILON;
 	enum class Type {
 		ORDINARY,
 		SHORT,
@@ -44,7 +45,6 @@ private:
 				 // starting point in starting position
 
 	// auxilliary
-	static const double EPSILON;
 
 	static bool cmp_doubles(double a, double b);
 };

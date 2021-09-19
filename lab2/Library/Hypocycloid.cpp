@@ -102,7 +102,7 @@ double Hypocycloid::calc_R_curvature(double t) const {
 
 	if (cmp_doubles(denominator, 0.)) return std::numeric_limits<double>::max();
 
-	double numerator = pow(R_small * R_small + Dist * Dist - 2. * Dist * R_small * cos(R_large * t / R_small), 1.5);
+	double numerator = (R_large - R_small) * pow(R_small * R_small + Dist * Dist - 2. * Dist * R_small * cos(R_large * t / R_small), 1.5);
 
 	R_c = numerator / denominator;
 
