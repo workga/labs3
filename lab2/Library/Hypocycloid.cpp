@@ -10,7 +10,7 @@ const double Hypocycloid::EPSILON = 0.00001;
 
 
 // constructors
-Hypocycloid::Hypocycloid() : 
+Hypocycloid::Hypocycloid() :
 	R_large(1.), R_small(0.25), Dist(0.25) {}
 
 Hypocycloid::Hypocycloid(Hypocycloid& hc) : // Default copy constructor does the same. It's just an exercise
@@ -33,9 +33,9 @@ Hypocycloid::Hypocycloid(double R_large, double R_small, double Dist) {
 
 
 // getters
-double Hypocycloid::get_R_large() const { return this->R_large; }
-double Hypocycloid::get_R_small() const { return this->R_small; }
-double Hypocycloid::get_Dist()    const { return this->Dist; }
+double Hypocycloid::get_R_large() const noexcept { return this->R_large; }
+double Hypocycloid::get_R_small() const noexcept{ return this->R_small; }
+double Hypocycloid::get_Dist()    const noexcept{ return this->Dist; }
 
 
 // setters
@@ -66,13 +66,13 @@ Hypocycloid& Hypocycloid::set_Dist(double Dist) {
 
 
 // tasks
-Hypocycloid::Type Hypocycloid::calc_type() const {
+Hypocycloid::Type Hypocycloid::calc_type() const noexcept {
 	if (cmp_doubles(this->Dist, this->R_small)) return Type::ORDINARY;
 	if (this->Dist < this->R_small) return Type::SHORT;
 	return Type::LONG;
 }
 
-Point Hypocycloid::calc_point(double t) const {
+Point Hypocycloid::calc_point(double t) const noexcept {
 	double x, y;
 
 	x = (R_large - R_small) * cos(t) +
@@ -83,7 +83,7 @@ Point Hypocycloid::calc_point(double t) const {
 	return Point{ x, y };
 }
 
-double Hypocycloid::calc_S_sectorial(double t) const {
+double Hypocycloid::calc_S_sectorial(double t) const noexcept {
 	double s;
 
 	s = ((R_large - R_small) / 2.) *
@@ -92,7 +92,7 @@ double Hypocycloid::calc_S_sectorial(double t) const {
 	return s;
 }
 
-double Hypocycloid::calc_R_curvature(double t) const {
+double Hypocycloid::calc_R_curvature(double t) const noexcept {
 	double R_c;
 
 	double denominator = fabs(Dist * Dist * (R_large - R_small) -
@@ -112,7 +112,7 @@ double Hypocycloid::calc_R_curvature(double t) const {
 
 
 // auxilliary
-bool Hypocycloid::cmp_doubles(double a, double b) {
+bool Hypocycloid::cmp_doubles(double a, double b) noexcept {
 	// const epsilon, works badly with large doubles
 	return (fabs(a - b) < EPSILON);
 

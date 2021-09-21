@@ -22,9 +22,9 @@ public:
 	Hypocycloid(double R_large, double R_small, double Dist);
 
 	// getters
-	double get_R_large() const;
-	double get_R_small() const;
-	double get_Dist() const;
+	double get_R_large() const noexcept;
+	double get_R_small() const noexcept;
+	double get_Dist() const noexcept;
 
 	// setters
 	Hypocycloid& set_R_large(double R_large);
@@ -32,10 +32,10 @@ public:
 	Hypocycloid& set_Dist(double Dist);
 
 	// tasks
-	Type   calc_type() const;
-	Point  calc_point(double t) const;
-	double calc_S_sectorial(double t) const;
-	double calc_R_curvature(double t) const;
+	Type   calc_type() const noexcept;
+	Point  calc_point(double t) const noexcept;
+	double calc_S_sectorial(double t) const noexcept;
+	double calc_R_curvature(double t) const noexcept;
 
 
 private:
@@ -46,7 +46,7 @@ private:
 
 	// auxilliary
 
-	static bool cmp_doubles(double a, double b);
+	static bool cmp_doubles(double a, double b) noexcept;
 };
 
 #endif

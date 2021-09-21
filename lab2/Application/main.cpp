@@ -1,6 +1,7 @@
-﻿
-// Ask: how to init static const members using private members?
-// How to cause fatal error in std::cin?
+﻿//1) how to compare doubles?
+//2) noexcept in constructors? what about initialization list?
+
+//1) add exception class
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>

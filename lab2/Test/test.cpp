@@ -51,12 +51,12 @@ TEST(Constructors, ParametrizedConstructor_2) {
 }
 
 TEST(Constructors, CopyConstructor) {
-	Hypocycloid hc_1 = Hypocycloid();
+	Hypocycloid hc_1((Hypocycloid()));
 	EXPECT_EQ(hc_1.get_R_large(), 1.);
 	EXPECT_EQ(hc_1.get_R_small(), 0.25);
 	EXPECT_EQ(hc_1.get_Dist(), 0.25);
 
-	Hypocycloid hc_2 = Hypocycloid(2., 1., 0.25);
+	Hypocycloid hc_2(Hypocycloid(2., 1., 0.25));
 	EXPECT_EQ(hc_2.get_R_large(), 2.);
 	EXPECT_EQ(hc_2.get_R_small(), 1.);
 	EXPECT_EQ(hc_2.get_Dist(), 0.25);
