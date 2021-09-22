@@ -1,6 +1,7 @@
-﻿//1) how to compare doubles?
-//2) noexcept in constructors? what about initialization list?
+﻿// Ask:
+//1) noexcept in constructors? what about initialization list?
 
+// ToDo
 //1) add exception class
 
 #define _CRTDBG_MAP_ALLOC

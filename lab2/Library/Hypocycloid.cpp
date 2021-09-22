@@ -113,19 +113,7 @@ double Hypocycloid::calc_R_curvature(double t) const noexcept {
 
 // auxilliary
 bool Hypocycloid::cmp_doubles(double a, double b) noexcept {
-	// const epsilon, works badly with large doubles
-	return (fabs(a - b) < EPSILON);
-
-	// relative epsilon, doesn't work with near-zero doubles
-	/*
-	double diff = fabs(a - b);
-	a = fabs(a);
-	b = fabs(b);
-	double largest = (a > b) ? a : b;
-
-	if (diff <= largest * std::numeric_limits<double>::epsilon())
-		return true;
-	return false;
-	*/
+	if (fabs(a - b) < EPSILON) return true; // for near-zero doubles
+	return fabs(a - b) <= std::max(fabs(a), fabs(b)) * EPSILON; // for bigger doubles
 }
 
