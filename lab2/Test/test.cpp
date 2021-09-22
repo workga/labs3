@@ -8,16 +8,16 @@
 // Constructors
 TEST(Constructors, DefaultConstructor) {
 	Hypocycloid hc_1;
-	EXPECT_EQ(hc_1.get_R_large(), 1.);
-	EXPECT_EQ(hc_1.get_R_small(), 0.25);
-	EXPECT_EQ(hc_1.get_Dist(), 0.25);
+	EXPECT_NEAR(hc_1.get_R_large(), 1., Hypocycloid::EPSILON);
+	EXPECT_NEAR(hc_1.get_R_small(), 0.25, Hypocycloid::EPSILON);
+	EXPECT_NEAR(hc_1.get_Dist(), 0.25, Hypocycloid::EPSILON);
 }
 
 TEST(Constructors, ParametrizedConstructor_1) {
 	Hypocycloid hc_1(2., 1., 0.25);
-	EXPECT_EQ(hc_1.get_R_large(), 2.);
-	EXPECT_EQ(hc_1.get_R_small(), 1.);
-	EXPECT_EQ(hc_1.get_Dist(), 0.25);
+	EXPECT_NEAR(hc_1.get_R_large(), 2., Hypocycloid::EPSILON);
+	EXPECT_NEAR(hc_1.get_R_small(), 1., Hypocycloid::EPSILON);
+	EXPECT_NEAR(hc_1.get_Dist(), 0.25, Hypocycloid::EPSILON);
 
 	EXPECT_THROW({
 		Hypocycloid hc_2(-1., 1., 0.25);
@@ -35,9 +35,9 @@ TEST(Constructors, ParametrizedConstructor_1) {
 
 TEST(Constructors, ParametrizedConstructor_2) {
 	Hypocycloid hc_1(2., 1.);
-	EXPECT_EQ(hc_1.get_R_large(), 2.);
-	EXPECT_EQ(hc_1.get_R_small(), 1.);
-	EXPECT_EQ(hc_1.get_Dist(), 1.);
+	EXPECT_NEAR(hc_1.get_R_large(), 2., Hypocycloid::EPSILON);
+	EXPECT_NEAR(hc_1.get_R_small(), 1., Hypocycloid::EPSILON);
+	EXPECT_NEAR(hc_1.get_Dist(), 1., Hypocycloid::EPSILON);
 
 	EXPECT_THROW({
 		Hypocycloid hc_2(-1., 1.);
@@ -52,28 +52,28 @@ TEST(Constructors, ParametrizedConstructor_2) {
 
 TEST(Constructors, CopyConstructor) {
 	Hypocycloid hc_1((Hypocycloid()));
-	EXPECT_EQ(hc_1.get_R_large(), 1.);
-	EXPECT_EQ(hc_1.get_R_small(), 0.25);
-	EXPECT_EQ(hc_1.get_Dist(), 0.25);
+	EXPECT_NEAR(hc_1.get_R_large(), 1., Hypocycloid::EPSILON);
+	EXPECT_NEAR(hc_1.get_R_small(), 0.25, Hypocycloid::EPSILON);
+	EXPECT_NEAR(hc_1.get_Dist(), 0.25, Hypocycloid::EPSILON);
 
 	Hypocycloid hc_2(Hypocycloid(2., 1., 0.25));
-	EXPECT_EQ(hc_2.get_R_large(), 2.);
-	EXPECT_EQ(hc_2.get_R_small(), 1.);
-	EXPECT_EQ(hc_2.get_Dist(), 0.25);
+	EXPECT_NEAR(hc_2.get_R_large(), 2., Hypocycloid::EPSILON);
+	EXPECT_NEAR(hc_2.get_R_small(), 1., Hypocycloid::EPSILON);
+	EXPECT_NEAR(hc_2.get_Dist(), 0.25, Hypocycloid::EPSILON);
 }
 
 
 // Getters
 TEST(Getters, AllGetters) {
 	Hypocycloid hc_1(2., 1., 0.25);
-	EXPECT_EQ(hc_1.get_R_large(), 2.);
-	EXPECT_EQ(hc_1.get_R_small(), 1.);
-	EXPECT_EQ(hc_1.get_Dist(), 0.25);
+	EXPECT_NEAR(hc_1.get_R_large(), 2., Hypocycloid::EPSILON);
+	EXPECT_NEAR(hc_1.get_R_small(), 1., Hypocycloid::EPSILON);
+	EXPECT_NEAR(hc_1.get_Dist(), 0.25, Hypocycloid::EPSILON);
 
 	Hypocycloid hc_2(4., 1., 0.5);
-	EXPECT_EQ(hc_2.get_R_large(), 4.);
-	EXPECT_EQ(hc_2.get_R_small(), 1.);
-	EXPECT_EQ(hc_2.get_Dist(), 0.5);
+	EXPECT_NEAR(hc_2.get_R_large(), 4., Hypocycloid::EPSILON);
+	EXPECT_NEAR(hc_2.get_R_small(), 1., Hypocycloid::EPSILON);
+	EXPECT_NEAR(hc_2.get_Dist(), 0.5, Hypocycloid::EPSILON);
 }
 
 // Setters
@@ -89,7 +89,7 @@ TEST(Setters, Set_R_large) {
 
 
 	hc_1.set_R_large(4);
-	EXPECT_EQ(hc_1.get_R_large(), 4);
+	EXPECT_NEAR(hc_1.get_R_large(), 4, Hypocycloid::EPSILON);
 }
 
 TEST(Setters, Set_R_small) {
@@ -104,7 +104,7 @@ TEST(Setters, Set_R_small) {
 
 
 	hc_1.set_R_small(0.5);
-	EXPECT_EQ(hc_1.get_R_small(), 0.5);
+	EXPECT_NEAR(hc_1.get_R_small(), 0.5, Hypocycloid::EPSILON);
 }
 
 TEST(Setters, Set_Dist) {
@@ -115,7 +115,7 @@ TEST(Setters, Set_Dist) {
 		}, std::logic_error);
 
 	hc_1.set_Dist(0.5);
-	EXPECT_EQ(hc_1.get_Dist(), 0.5);
+	EXPECT_NEAR(hc_1.get_Dist(), 0.5, Hypocycloid::EPSILON);
 }
 
 // tasks

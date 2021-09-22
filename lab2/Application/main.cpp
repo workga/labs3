@@ -1,8 +1,6 @@
-﻿// Ask:
-//1) noexcept in constructors? what about initialization list?
-
-// ToDo
+﻿// ToDo
 //1) add exception class
+//2) add more variants of good cases in tests
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>

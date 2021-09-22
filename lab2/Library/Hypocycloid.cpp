@@ -10,10 +10,10 @@ const double Hypocycloid::EPSILON = 0.00001;
 
 
 // constructors
-Hypocycloid::Hypocycloid() :
+Hypocycloid::Hypocycloid() noexcept :
 	R_large(1.), R_small(0.25), Dist(0.25) {}
 
-Hypocycloid::Hypocycloid(Hypocycloid& hc) : // Default copy constructor does the same. It's just an exercise
+Hypocycloid::Hypocycloid(Hypocycloid& hc) noexcept: // Default copy constructor does the same. It's just an exercise
 	R_large(hc.R_large), R_small(hc.R_small), Dist(hc.R_small) {}
 
 Hypocycloid::Hypocycloid(double R_large, double R_small) : // Delegating constructor

@@ -16,8 +16,8 @@ public:
 
 
 	// constructors
-	Hypocycloid();
-	Hypocycloid(Hypocycloid& hc);
+	Hypocycloid() noexcept;
+	Hypocycloid(Hypocycloid& hc) noexcept;
 	Hypocycloid(double R_large, double R_small);
 	Hypocycloid(double R_large, double R_small, double Dist);
 
