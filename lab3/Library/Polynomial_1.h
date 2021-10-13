@@ -33,6 +33,7 @@ public:
 	explicit Polynomial_1(int deg, const double factors[]); 
 	
 	// Create monomial
+	// (f != 0)
 	explicit Polynomial_1(int deg, double f);
 
 

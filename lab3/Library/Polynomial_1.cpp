@@ -38,6 +38,7 @@ Polynomial_1::Polynomial_1(int deg, const double factors[]) {
 }
 
 // Create monomial
+// (f != 0)
 Polynomial_1::Polynomial_1(int deg, double f) {
 	if (deg < 0)
 		throw std::logic_error("Negative degree.");
@@ -63,7 +64,7 @@ std::istream& Polynomial_1::input(std::istream& in) {
 	double factors[MAX_DEG + 1];
 
 	in >> deg;
-	if (deg < 0) in.setstate(std::ios::failbit);
+	if (deg > MAX_DEG || deg < 0) in.setstate(std::ios::failbit);
 
 	for (int i = 0; i <= deg; i++) {
 		in >> factors[i];
@@ -74,7 +75,7 @@ std::istream& Polynomial_1::input(std::istream& in) {
 		m_factors[i] = factors[i];
 	}
 
-	// Is it better option?
+	// Is it a better option?
 	// (It will also throw exception if needed)
 	// 
 	//Polynomial_1 p(deg, factors);
@@ -88,9 +89,9 @@ std::ostream& Polynomial_1::output(std::ostream& out) const noexcept {
 	// Does it make sense?
 	// (Remove noexcept if it does)
 	// 
-	//in.exceptions(std::istream::failbit |
-	//			  std::istream::badbit |
-	//			  std::istream::eofbit);
+	//in.exceptions(std::ostream::failbit |
+	//			  std::ostream::badbit |
+	//			  std::ostream::eofbit);
 
 	out << m_factors[0];
 	for (int i = 1; i <= m_deg; i++) {
@@ -101,7 +102,8 @@ std::ostream& Polynomial_1::output(std::ostream& out) const noexcept {
 		else {
 			out << std::showpos << m_factors[i] << std::noshowpos;
 		}
-		out << "x^" << i;
+		out << "x";
+		if (i >= 2) out << "^" << i;
 	}
 
 	out << std::endl;
@@ -122,7 +124,7 @@ Polynomial_1& Polynomial_1::sum(const Polynomial_1& a) noexcept {
 	int n = std::max(m_deg, a.deg());
 
 	// Decrease degree only if current factor equals zero accurately.
-	while (m_factors[n] == 0)
+	while (m_factors[n] == 0 && n > 0)
 		n--;
 
 	m_deg = n;
@@ -172,7 +174,7 @@ Polynomial_1& Polynomial_1::mult(const Polynomial_1& a) {
 	}
 
 	// Decrease degree only if current factor equals zero accurately.
-	while (factors[deg] == 0)
+	while (factors[deg] == 0 && deg > 0)
 		deg--;
 
 	m_deg = deg;
@@ -285,8 +287,8 @@ bool Polynomial_1::equals(const Polynomial_1& a, bool accurately) const noexcept
 
 
 double Polynomial_1::value(double x) const noexcept {
-	double v = m_factors[0];
-	for (int i = 1; i <= m_deg; i++) {
+	double v = m_factors[m_deg];
+	for (int i = m_deg - 1; i >= 0; i--) {
 		v *= x;
 		v += m_factors[i];
 	}
