@@ -2,65 +2,101 @@
 #define H_POLYNOMIAL
 
 // TODO
-// Gorner's scheme
-// Root search
+// does division work for constant?
+// self???
+
+// overloadings:
+// + += 
+// - -= 
+// ( / /= )
+// ( % %= )
+// == !=
+// ()
+// [] read only
+
 
 // static implementation without operators overloading
 class Polynomial_1 {
 public:
 	static const int MAX_DEG = 10;
 
-	// Constructors
-	Polynomial_1() noexcept; // Create polynomial "0"
-	explicit Polynomial_1(int deg, const double factors[] = nullptr);
+	//------/ Constructors /------
 
-	// Operations
-	friend std::istream& input(std::istream& in, Polynomial_1& p); // ">>"
-	friend std::ostream& output(std::ostream& out, const Polynomial_1& p) noexcept; // "<<"
+	// Create constant zero.
+	Polynomial_1() noexcept;
 
-	Polynomial_1& sum(const Polynomial_1& p) noexcept; // "+="
-	friend Polynomial_1 sum(const Polynomial_1& p1, const Polynomial_1& p2) noexcept; // "+"
+	// Create constant, not explicit.
+	Polynomial_1(double c) noexcept;
 
-	Polynomial_1& div(double b) noexcept; // "/="
-	friend Polynomial_1 div(const Polynomial_1& p, double b) noexcept; // "/"
+	// Factors' length must be at least (deg + 1).
+	// Factors start with zero degree.
+	explicit Polynomial_1(int deg, const double factors[]); 
+	
+	// Create monomial
+	explicit Polynomial_1(int deg, double f);
 
-	// return the rest as null-degree polynomial
-	Polynomial_1& mod(double b) noexcept; // "%="
-	friend Polynomial_1 mod(const Polynomial_1& p, double b) noexcept; // "%"
+
+	//------/ Input/Output /-------
+	std::istream& input(std::istream& in);
+	std::ostream& output(std::ostream& out) const noexcept;
+
+
+	//------/ Operations /---------
+	Polynomial_1& sum(const Polynomial_1& a) noexcept;
+	Polynomial_1& sum(const Polynomial_1& a, Polynomial_1& result) const noexcept;
+
+	Polynomial_1& sub(const Polynomial_1& a) noexcept;
+	Polynomial_1& sub(const Polynomial_1& a, Polynomial_1& result) const noexcept;
+
+	Polynomial_1& mult(const Polynomial_1& a);
+	Polynomial_1& mult(const Polynomial_1& a, Polynomial_1& result) const;
+
+	Polynomial_1& div(const Polynomial_1& d);
+	Polynomial_1& div(const Polynomial_1& d, Polynomial_1& result) const;
+	
+	Polynomial_1& mod(const Polynomial_1& d);
+	Polynomial_1& mod(const Polynomial_1& d, Polynomial_1& result) const;
 	
 	Polynomial_1& derivative() noexcept;
-	friend Polynomial_1 derivative(const Polynomial_1& p) noexcept;
+	Polynomial_1& derivative(Polynomial_1& result) const noexcept;
 
-	bool equals(const Polynomial_1& p) const noexcept;
+	bool equals(const Polynomial_1& a, bool accurately=false) const noexcept;
 
-	double value(double x) const noexcept; // "()"
-	int root(double a, double b, double& res) const noexcept;
-	
 
+	double value(double x) const noexcept;
+	int root(double a, double b, double& res) const;
+	int deg() const noexcept { return m_deg; };
 
 private:
+	static const int NEWTONE_ITERATIONS_LIMIT = 10000;
+	
 	int m_deg;
 	double m_factors[MAX_DEG + 1];
+
+	// Return lead factor
+	double lead() const noexcept { return m_factors[m_deg]; };
 };
 
 
 bool cmp_doubles(double a, double b) noexcept;
 
-template <typename T>
-static int get_value(T& v, std::istream& in=std::cin, std::ostream& out = std::cout) {
-	in >> v;
-
-	while (!in.good()) {
-		if (in.bad()) throw std::runtime_error("Fatal error");
-		if (in.eof()) return 1;
-
-		in.clear();
-		in.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-		out << "Invalid input. Please, try again from incorrect value" << std::endl;
-		in >> v;
-	}
-
-	return 0;
-}
 #endif
+
+//........................................................
+
+
+//template <typename T>
+//static int get_value(T& v, std::istream& in=std::cin, std::ostream& out = std::cout) {
+//	while (!in.good()) {
+//		if (in.bad()) throw std::runtime_error("Fatal error");
+//		if (in.eof()) return 1;
+//
+//		in.clear();
+//		in.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+//
+//		out << "Invalid input. Please, try again from incorrect value" << std::endl;
+//		in >> v;
+//	}
+//
+//	return 0;
+//}

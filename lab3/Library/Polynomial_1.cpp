@@ -8,66 +8,100 @@
 
 const double EPSILON = 0.0000001;
 
+//------/ Constructors /------
 
-// Constructors and Destructor
-
-// Create polynomial "0"
+// Create constant zero.
 Polynomial_1::Polynomial_1() noexcept : m_deg(0) {
-	for (int i = 0; i <= MAX_DEG; i++) {
+	m_factors[0] = 0;
+}
+
+// Create constant, not explicit.
+Polynomial_1::Polynomial_1(double c) noexcept : m_deg(0) {
+	m_factors[0] = c;
+}
+
+// Factors' length must be at least (deg + 1).
+// Factors start with zero degree.
+Polynomial_1::Polynomial_1(int deg, const double factors[]) {
+	if (deg < 0)
+		throw std::logic_error("Negative degree.");
+	if (deg > MAX_DEG)
+		throw std::logic_error("Too big degree.");
+
+	m_deg = deg;
+	for (int i = 0; i <= m_deg; i++) {
+		m_factors[i] = factors[i];
+	}
+
+	while (m_factors[m_deg] == 0 && m_deg > 0)
+		m_deg--;
+}
+
+// Create monomial
+Polynomial_1::Polynomial_1(int deg, double f) {
+	if (deg < 0)
+		throw std::logic_error("Negative degree.");
+	if (deg > MAX_DEG)
+		throw std::logic_error("Too big degree.");
+
+	m_deg = deg;
+	m_factors[deg] = f;
+
+	for (int i = 0; i < m_deg; i++) {
 		m_factors[i] = 0;
 	}
 }
 
-// factors' length must be at least (deg + 1)
-// Descending factors
-// Ascending m_factors
-Polynomial_1::Polynomial_1(int deg, const double factors[]) {
-	if (deg > MAX_DEG) throw std::logic_error("Too big degree");
+
+//------/ Input/Output /-------
+std::istream& Polynomial_1::input(std::istream& in) {
+	in.exceptions(std::istream::failbit |
+				  std::istream::badbit |
+				  std::istream::eofbit);
+
+	int deg;
+	double factors[MAX_DEG + 1];
+
+	in >> deg;
+	if (deg < 0) in.setstate(std::ios::failbit);
+
+	for (int i = 0; i <= deg; i++) {
+		in >> factors[i];
+	}
 
 	m_deg = deg;
-	if (!factors) {
-		for (int i = 0; i <= MAX_DEG; i++) {
-			m_factors[i] = 0;
-		}
+	for (int i = 0; i <= m_deg; i++) {
+		m_factors[i] = factors[i];
 	}
-	else {
-		for (int i = 0; i <= m_deg; i++) {
-			m_factors[i] = factors[m_deg - i];
-		}
-		for (int i = m_deg + 1; i <= MAX_DEG; i++) {
-			m_factors[i] = 0;
-		}
-	}
-}
 
-
-// Operations
-std::istream& input(std::istream& in, Polynomial_1& p) {
-	int degree;
-	if (get_value(degree, in)) throw std::runtime_error("EOF");
-	if (degree < 0) throw std::logic_error("Negative degree");
-
-	p.m_deg = degree;
-	for (int i = 0; i <= p.m_deg; i++) {
-		if (get_value(p.m_factors[p.m_deg - i], in)) 
-			throw std::runtime_error("EOF");
-	}
+	// Is it better option?
+	// (It will also throw exception if needed)
+	// 
+	//Polynomial_1 p(deg, factors);
+	//*this = p;
+	//
 	
 	return in;
 }
 
-std::ostream& output(std::ostream& out, const Polynomial_1& p) noexcept {
-	bool first = true;
-	for (int i = 0; i <= p.m_deg; i++) {
-		double cur = p.m_factors[i];
-		
+std::ostream& Polynomial_1::output(std::ostream& out) const noexcept {
+	// Does it make sense?
+	// (Remove noexcept if it does)
+	// 
+	//in.exceptions(std::istream::failbit |
+	//			  std::istream::badbit |
+	//			  std::istream::eofbit);
 
-		if (!first) {
-			out << std::showpos << cur << std::noshowpos;
-			out << "x^" << i;
+	out << m_factors[0];
+	for (int i = 1; i <= m_deg; i++) {
+		if (m_factors[i] == 1)
+			out << "+";
+		else if (m_factors[i] == -1)
+			out << "-";
+		else {
+			out << std::showpos << m_factors[i] << std::noshowpos;
 		}
-		else out << cur;
-		first = false;
+		out << "x^" << i;
 	}
 
 	out << std::endl;
@@ -75,109 +109,175 @@ std::ostream& output(std::ostream& out, const Polynomial_1& p) noexcept {
 }
 
 
-Polynomial_1& Polynomial_1::sum(const Polynomial_1& p) noexcept {
-	m_deg = std::max(m_deg, p.m_deg);
-	for (int i = 0; i <= p.m_deg; i++) {
-		m_factors[i] += p.m_factors[i];
+//------/ Operations /---------
+Polynomial_1& Polynomial_1::sum(const Polynomial_1& a) noexcept {
+	for (int i = 0; i <= a.deg(); i++) {
+		if (i <= m_deg)
+			m_factors[i] += a.m_factors[i];
+		else
+			// These factors may contain garbage.
+			m_factors[i] = a.m_factors[i];
+	}
+
+	int n = std::max(m_deg, a.deg());
+
+	// Decrease degree only if current factor equals zero accurately.
+	while (m_factors[n] == 0)
+		n--;
+
+	m_deg = n;
+
+	return *this;
+}
+
+Polynomial_1& Polynomial_1::sum(const Polynomial_1& a, Polynomial_1& result) const noexcept {
+	result = *this; 
+	result.sum(a);
+
+	return result;
+}
+
+
+Polynomial_1& Polynomial_1::sub(const Polynomial_1& a) noexcept {
+	Polynomial_1 minus_one(-1);
+	Polynomial_1 b;
+	a.mult(minus_one, b);
+
+	this->sum(b);
+
+	return *this;
+}
+
+Polynomial_1& Polynomial_1::sub(const Polynomial_1& a, Polynomial_1& result) const noexcept {
+	result = *this;
+	result.sub(a);
+
+	return result;
+}
+
+
+Polynomial_1& Polynomial_1::mult(const Polynomial_1& a) {
+	if (m_deg + a.deg() > MAX_DEG) throw std::logic_error("Too big degrees.");
+
+	int deg = m_deg + a.deg();
+	double factors[MAX_DEG + 1];
+	for (int i = 0; i <= deg; i++) { // It's loop, but it initialize only necessary factors.
+		factors[i] = 0;
+	}
+
+	for (int i = 0; i <= m_deg; i++) {
+		for (int j = 0; j <= a.deg(); j++) {
+			factors[i + j] += m_factors[i] * a.m_factors[j];
+		}
+	}
+
+	// Decrease degree only if current factor equals zero accurately.
+	while (factors[deg] == 0)
+		deg--;
+
+	m_deg = deg;
+	for (int i = 0; i <= deg; i++) {
+		m_factors[i] = factors[i];
 	}
 
 	return *this;
 }
 
-Polynomial_1 sum(const Polynomial_1& p1, const Polynomial_1& p2) noexcept {
-	Polynomial_1 p(p1);
-	p.sum(p2);
+Polynomial_1& Polynomial_1::mult(const Polynomial_1& a, Polynomial_1& result) const {
+	result = *this;
+	result.mult(a);
 
-	return p;
+	return result;
 }
 
 
-Polynomial_1& Polynomial_1::div(double b) noexcept {
-	double* a = m_factors;
-	double c[MAX_DEG];
-	int n = m_deg;
+Polynomial_1& Polynomial_1::div(const Polynomial_1& d) {
+	if (d.equals(0, true)) throw std::logic_error("Dividing by zero.");
 
-	if (n == 0) {
-		m_factors[n] = 0;
-		return *this;
+	Polynomial_1 q(0);
+	Polynomial_1 r = *this;
+
+	while (!r.equals(0) && r.deg() >= d.deg()) {
+		// t is monomial obtained by division of leading terms.
+		Polynomial_1 t((r.deg() - d.deg()), (r.lead() / d.lead()));
+
+		q.sum(t);
+		r.sub(t.mult(d)); // attention: modifying t
 	}
-
-	c[n - 1] = a[n];
-	for (int i = n - 2; i >= 0; i--) {
-		c[i] = a[i + 1] + b * c[i + 1];
-	}
-
-	for (int i = 0; i <= n - 1; i++) {
-		m_factors[i] = c[i];
-	}
-	m_factors[n] = 0;
-	m_deg = n - 1;
-
+	
+	*this = q;
 	return *this;
 }
 
-Polynomial_1 div(const Polynomial_1& p, double b) noexcept {
-	Polynomial_1 q(p);
-	q.div(b);
-	return q;
+Polynomial_1& Polynomial_1::div(const Polynomial_1& d, Polynomial_1& result) const {
+	result = *this;
+	result.div(d);
+
+	return result;
 }
 
 
-Polynomial_1& Polynomial_1::mod(double b) noexcept {
-	double v = value(b);
-	m_factors[0] = v;
-	for (int i = 1; i <= m_deg; i++) {
-		m_factors[i] = 0;
+Polynomial_1& Polynomial_1::mod(const Polynomial_1& d) {
+	if (d.equals(0, true)) throw std::logic_error("Dividing by zero.");
+
+	Polynomial_1 q(0);
+	Polynomial_1 r = *this;
+
+	while (!r.equals(0, true) && r.deg() >= d.deg()) {
+		// t is monomial obtained by division of leading terms.
+		Polynomial_1 t((r.deg() - d.deg()), (r.lead() / d.lead()));
+
+		q.sum(t);
+		r.sub(t.mult(d)); // attention: modifying t
 	}
-	m_deg = 0;
+
+	*this = r;
 	return *this;
 }
 
-Polynomial_1 mod(const Polynomial_1& p, double b) noexcept {
-	Polynomial_1 q(p);
-	q.mod(b);
-	return q;
+Polynomial_1& Polynomial_1::mod(const Polynomial_1& d, Polynomial_1& result) const {
+	result = *this;
+	result.mod(d);
+
+	return result;
 }
 
 
 Polynomial_1& Polynomial_1::derivative() noexcept {
-	double* a = m_factors;
-	double c[MAX_DEG];
-
-	int n = m_deg;
-
-	if (n == 0) {
-		m_factors[n] = 0;
+	if (m_deg == 0) {
+		m_factors[m_deg] = 0;
 		return *this;
 	}
 
-	for (int i = 0; i < n; i++) {
-		c[i] = a[i + 1] * (static_cast<double>(i) + 1);
+	for (int i = 0; i < m_deg; i++) {
+		m_factors[i] = m_factors[i + 1] * (i + 1);
 	}
-
-	for (int i = 0; i <= n - 1; i++) {
-		m_factors[i] = c[i];
-	}
-
-	m_factors[n] = 0;
-	m_deg = n - 1;
+	m_factors[m_deg] = 0;
+	m_deg--;
 
 	return *this;
 }
 
+Polynomial_1& Polynomial_1::derivative(Polynomial_1& result) const noexcept {
+	result = *this;
+	result.derivative();
 
-Polynomial_1 derivative(const Polynomial_1& p) noexcept {
-	Polynomial_1 q(p);
-	q.derivative();
-	return q;
+	return result;
 }
 
 
+bool Polynomial_1::equals(const Polynomial_1& a, bool accurately) const noexcept {
+	if (m_deg != a.deg()) return false;
 
-bool Polynomial_1::equals(const Polynomial_1& p) const noexcept {
-	if (m_deg != p.m_deg) return false;
-	for (int i = 0; i <= m_deg; i++) {
-		if (!cmp_doubles(m_factors[i], p.m_factors[i])) return false;
+	if (accurately) {
+		for (int i = 0; i <= m_deg; i++) {
+			if (m_factors[i] != a.m_factors[i]) return false;
+		}
+	}
+	else {
+		for (int i = 0; i <= m_deg; i++) {
+			if (!cmp_doubles(m_factors[i], a.m_factors[i])) return false;
+		}
 	}
 
 	return true;
@@ -185,52 +285,134 @@ bool Polynomial_1::equals(const Polynomial_1& p) const noexcept {
 
 
 double Polynomial_1::value(double x) const noexcept {
-	double cur_x = 1;
 	double v = m_factors[0];
 	for (int i = 1; i <= m_deg; i++) {
-		cur_x *= x;
-		v += m_factors[i] * cur_x;
+		v *= x;
+		v += m_factors[i];
 	}
 
 	return v;
 }
 
-// it finds only 1 root
-int Polynomial_1::root(double a, double b, double& res) const noexcept {
-	double left = value(a);
-	double right = value(b);
+int Polynomial_1::root(double a, double b, double& res) const {
+	if (a >= b) throw std::logic_error("Invalid interval.");
 
-	if (cmp_doubles(left, 0)) {
+	double va = value(a);
+	double vb = value(b);
+
+	if (cmp_doubles(va, 0)) {
 		res = a;
 		return 0;
 	}
-	if (cmp_doubles(right, 0)) {
+	if (cmp_doubles(vb, 0)) {
 		res = b;
 		return 0;
 	}
 
-	if (left * right > 0) return 1;
+	if (va * vb > 0) return 1;
 
-	double c = a + (b - a) / 2;
-	double middle = value(c);
 
-	while (!cmp_doubles(middle, 0)) {
-		// std::cout << "P(" << c << ") = " << middle << "\n";
-		if (middle * left > 0)
-			a = c;
-		else
-			b = c;
-		c = a + (b - a) / 2;
-		middle = value(c);
+	Polynomial_1 d;
+	derivative(d);
+
+	double cur_x = a + (b - a) / 2;
+	int count = 0;
+	while (!cmp_doubles(value(cur_x), 0) && count <= NEWTONE_ITERATIONS_LIMIT) {
+		cur_x = cur_x - value(cur_x) / d.value(cur_x);
+		count++;
 	}
 
-	res = c;
+	if (count > NEWTONE_ITERATIONS_LIMIT) return 1;
 
+	res = cur_x;
 	return 0;
 }
+
 
 
 bool cmp_doubles(double a, double b) noexcept {
 	if (fabs(a - b) < EPSILON) return true; // for near-zero doubles
 	return fabs(a - b) <= std::max(fabs(a), fabs(b)) * EPSILON; // for bigger doubles
 }
+
+//--------------------------------------------------------------------------
+//Polynomial_1& Polynomial_1::div(double b) noexcept {
+//	double* a = m_factors;
+//	double c[MAX_DEG];
+//	int n = m_deg;
+//
+//	if (n == 0) {
+//		m_factors[n] = 0;
+//		return *this;
+//	}
+//
+//	c[n - 1] = a[n];
+//	for (int i = n - 2; i >= 0; i--) {
+//		c[i] = a[i + 1] + b * c[i + 1];
+//	}
+//
+//	for (int i = 0; i <= n - 1; i++) {
+//		m_factors[i] = c[i];
+//	}
+//	m_factors[n] = 0;
+//	m_deg = n - 1;
+//
+//	return *this;
+//}
+//
+//Polynomial_1 div(const Polynomial_1& p, double b) noexcept {
+//	Polynomial_1 q(p);
+//	q.div(b);
+//	return q;
+//}
+
+
+//Polynomial_1& Polynomial_1::mod(double b) noexcept {
+//	double v = value(b);
+//	m_factors[0] = v;
+//	for (int i = 1; i <= m_deg; i++) {
+//		m_factors[i] = 0;
+//	}
+//	m_deg = 0;
+//	return *this;
+//}
+//
+//Polynomial_1 mod(const Polynomial_1& p, double b) noexcept {
+//	Polynomial_1 q(p);
+//	q.mod(b);
+//	return q;
+//}
+
+// it finds only 1 root
+//int Polynomial_1::root(double a, double b, double& res) const noexcept {
+//	double left = value(a);
+//	double right = value(b);
+//
+//	if (cmp_doubles(left, 0)) {
+//		res = a;
+//		return 0;
+//	}
+//	if (cmp_doubles(right, 0)) {
+//		res = b;
+//		return 0;
+//	}
+//
+//	if (left * right > 0) return 1;
+//
+//	double c = a + (b - a) / 2;
+//	double middle = value(c);
+//
+//	while (!cmp_doubles(middle, 0)) {
+//		// std::cout << "P(" << c << ") = " << middle << "\n";
+//		if (middle * left > 0)
+//			a = c;
+//		else
+//			b = c;
+//		c = a + (b - a) / 2;
+//		middle = value(c);
+//	}
+//
+//	res = c;
+//
+//	return 0;
+//}
