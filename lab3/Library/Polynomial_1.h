@@ -2,17 +2,7 @@
 #define H_POLYNOMIAL
 
 // TODO
-// does division work for constant?
 // self???
-
-// overloadings:
-// + += 
-// - -= 
-// ( / /= )
-// ( % %= )
-// == !=
-// ()
-// [] read only
 
 
 // static implementation without operators overloading

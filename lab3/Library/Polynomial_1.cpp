@@ -74,13 +74,6 @@ std::istream& Polynomial_1::input(std::istream& in) {
 	for (int i = 0; i <= m_deg; i++) {
 		m_factors[i] = factors[i];
 	}
-
-	// Is it a better option?
-	// (It will also throw exception if needed)
-	// 
-	//Polynomial_1 p(deg, factors);
-	//*this = p;
-	//
 	
 	return in;
 }
@@ -336,85 +329,3 @@ bool cmp_doubles(double a, double b) noexcept {
 	if (fabs(a - b) < EPSILON) return true; // for near-zero doubles
 	return fabs(a - b) <= std::max(fabs(a), fabs(b)) * EPSILON; // for bigger doubles
 }
-
-//--------------------------------------------------------------------------
-//Polynomial_1& Polynomial_1::div(double b) noexcept {
-//	double* a = m_factors;
-//	double c[MAX_DEG];
-//	int n = m_deg;
-//
-//	if (n == 0) {
-//		m_factors[n] = 0;
-//		return *this;
-//	}
-//
-//	c[n - 1] = a[n];
-//	for (int i = n - 2; i >= 0; i--) {
-//		c[i] = a[i + 1] + b * c[i + 1];
-//	}
-//
-//	for (int i = 0; i <= n - 1; i++) {
-//		m_factors[i] = c[i];
-//	}
-//	m_factors[n] = 0;
-//	m_deg = n - 1;
-//
-//	return *this;
-//}
-//
-//Polynomial_1 div(const Polynomial_1& p, double b) noexcept {
-//	Polynomial_1 q(p);
-//	q.div(b);
-//	return q;
-//}
-
-
-//Polynomial_1& Polynomial_1::mod(double b) noexcept {
-//	double v = value(b);
-//	m_factors[0] = v;
-//	for (int i = 1; i <= m_deg; i++) {
-//		m_factors[i] = 0;
-//	}
-//	m_deg = 0;
-//	return *this;
-//}
-//
-//Polynomial_1 mod(const Polynomial_1& p, double b) noexcept {
-//	Polynomial_1 q(p);
-//	q.mod(b);
-//	return q;
-//}
-
-// it finds only 1 root
-//int Polynomial_1::root(double a, double b, double& res) const noexcept {
-//	double left = value(a);
-//	double right = value(b);
-//
-//	if (cmp_doubles(left, 0)) {
-//		res = a;
-//		return 0;
-//	}
-//	if (cmp_doubles(right, 0)) {
-//		res = b;
-//		return 0;
-//	}
-//
-//	if (left * right > 0) return 1;
-//
-//	double c = a + (b - a) / 2;
-//	double middle = value(c);
-//
-//	while (!cmp_doubles(middle, 0)) {
-//		// std::cout << "P(" << c << ") = " << middle << "\n";
-//		if (middle * left > 0)
-//			a = c;
-//		else
-//			b = c;
-//		c = a + (b - a) / 2;
-//		middle = value(c);
-//	}
-//
-//	res = c;
-//
-//	return 0;
-//}

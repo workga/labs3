@@ -1,10 +1,4 @@
-// Ask:
-// 1) use ostream exceptions?
-// 2) use copy constructor in input method?
-// 3) distinguish modifying and not modifying operations by additional result argument?
-// 4) what to do with exceptions for operators ( / and * )
-
-#ifdef _MSC_VER
+s#ifdef _MSC_VER
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
