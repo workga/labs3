@@ -72,22 +72,3 @@ private:
 bool cmp_doubles(double a, double b) noexcept;
 
 #endif
-
-//........................................................
-
-
-//template <typename T>
-//static int get_value(T& v, std::istream& in=std::cin, std::ostream& out = std::cout) {
-//	while (!in.good()) {
-//		if (in.bad()) throw std::runtime_error("Fatal error");
-//		if (in.eof()) return 1;
-//
-//		in.clear();
-//		in.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-//
-//		out << "Invalid input. Please, try again from incorrect value" << std::endl;
-//		in >> v;
-//	}
-//
-//	return 0;
-//}
