@@ -17,7 +17,7 @@ public:
 
 	// Factors' length must be at least (deg + 1).
 	// Factors start with zero degree.
-	explicit Polynomial_2(int deg, const double factors[]); 
+	Polynomial_2(int deg, const double factors[]); 
 	
 	// Create monomial
 	// (f != 0)
@@ -61,7 +61,7 @@ public:
 
 	//------/ Tasks /-----------------
 	Polynomial_2& derivative() noexcept;
-	Polynomial_2& derivative(Polynomial_2& result) const noexcept;
+	Polynomial_2& derivative(Polynomial_2& res) const noexcept;
 
 	int root(double a, double b, double& res) const;
 

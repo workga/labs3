@@ -125,10 +125,10 @@ Polynomial_2& Polynomial_2::operator+=(const Polynomial_2& a) noexcept {
 }
 
 Polynomial_2 operator+(const Polynomial_2& a, const Polynomial_2& b) noexcept {
-	Polynomial_2 r = a;
-	r += b;
+	Polynomial_2 res = a;
+	res += b;
 
-	return r;
+	return res;
 }
 
 // Sub
@@ -140,10 +140,10 @@ Polynomial_2& Polynomial_2::operator-=(const Polynomial_2& a) noexcept {
 }
 
 Polynomial_2 operator-(const Polynomial_2& a, const Polynomial_2& b) noexcept {
-	Polynomial_2 r = a;
-	r -= b;
+	Polynomial_2 res = a;
+	res -= b;
 
-	return r;
+	return res;
 }
 
 // Mult
@@ -176,10 +176,10 @@ Polynomial_2& Polynomial_2::operator*=(const Polynomial_2& a) {
 }
 
 Polynomial_2 operator*(const Polynomial_2& a, const Polynomial_2& b) {
-	Polynomial_2 r = a;
-	r *= b;
+	Polynomial_2 res = a;
+	res *= b;
 
-	return r;
+	return res;
 }
 
 // Div
@@ -202,10 +202,10 @@ Polynomial_2& Polynomial_2::operator/=(const Polynomial_2& d) {
 }
 
 Polynomial_2 operator/(const Polynomial_2& a, const Polynomial_2& d) {
-	Polynomial_2 r = a;
-	r /= d;
+	Polynomial_2 res = a;
+	res /= d;
 
-	return r;
+	return res;
 }
 
 // Mod
@@ -228,10 +228,10 @@ Polynomial_2& Polynomial_2::operator%=(const Polynomial_2& d) {
 }
 
 Polynomial_2 operator%(const Polynomial_2& a, const Polynomial_2& d) {
-	Polynomial_2 r = a;
-	r %= d;
+	Polynomial_2 res = a;
+	res %= d;
 
-	return r;
+	return res;
 }
 
 
@@ -252,13 +252,13 @@ bool operator!=(const Polynomial_2& a, const Polynomial_2& b) {
 
 // Value
 double Polynomial_2::operator()(double x) const noexcept {
-	double v = m_factors[m_deg];
+	double value = m_factors[m_deg];
 	for (int i = m_deg - 1; i >= 0; i--) {
-		v *= x;
-		v += m_factors[i];
+		value *= x;
+		value += m_factors[i];
 	}
 
-	return v;
+	return value;
 }
 
 // Index
@@ -286,11 +286,11 @@ Polynomial_2& Polynomial_2::derivative() noexcept {
 	return *this;
 }
 
-Polynomial_2& Polynomial_2::derivative(Polynomial_2& result) const noexcept {
-	result = *this;
-	result.derivative();
+Polynomial_2& Polynomial_2::derivative(Polynomial_2& res) const noexcept {
+	res = *this;
+	res.derivative();
 
-	return result;
+	return res;
 }
 
 
