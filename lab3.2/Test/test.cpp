@@ -105,6 +105,9 @@ TEST(IO, Input) {
 	P p_1;
 	istr_1 >> p_1;
 
+	ASSERT_TRUE(istr_1.good());
+
+
 	P q_1 = poly(3, { 1, 2, 3, 4 });
 	EXPECT_TRUE(p_1 == q_1);
 
@@ -113,38 +116,54 @@ TEST(IO, Input) {
 	istr_2.exceptions(std::istream::eofbit);
 
 
-	P p_2;
+	P p_2 = poly(2, { 9, 3, 2 });
+	P old_p_2 = p_2;
 	EXPECT_THROW({
 		istr_2 >> p_2;
-	}, std::iostream::failure);
+		}, std::iostream::failure);
+
+	EXPECT_TRUE(p_2 == old_p_2);
+
 
 	// 3. Fail input
 	std::istringstream istr_3("3 1 a");
 	istr_3.exceptions(std::istream::failbit);
 
-	P p_3;
+	P p_3 = poly(2, { 5, 1, 8 });
+	P old_p_3 = p_3;
+
 	EXPECT_THROW({
 		istr_3 >> p_3;
-	}, std::iostream::failure);
+		}, std::iostream::failure);
+
+	EXPECT_TRUE(p_3 == old_p_3);
 
 	// 4. Too big degree
 	std::istringstream istr_4(std::to_string(int(P::MAX_DEG + 1)) + "\n");
 	istr_4.exceptions(std::istream::failbit);
 
 
-	P p_4;
+	P p_4 = poly(2, { 8, 8, 1 });
+	P old_p_4 = p_4;
+
 	EXPECT_THROW({
 		istr_4 >> p_4;
-	}, std::iostream::failure);
+		}, std::iostream::failure);
+
+	EXPECT_TRUE(p_4 == old_p_4);
 
 	// 5. Negative degree
 	std::istringstream istr_5(std::to_string(int(P::MAX_DEG + 1)) + "\n");
 	istr_5.exceptions(std::istream::failbit);
 
-	P p_5;
+	P p_5 = poly(2, { 7, 2, 4 });
+	P old_p_5 = p_5;
+
 	EXPECT_THROW({
 		istr_5 >> p_5;
-	}, std::iostream::failure);
+		}, std::iostream::failure);
+
+	EXPECT_TRUE(p_5 == old_p_5);
 
 }
 
@@ -459,8 +478,8 @@ TEST(Operators, Equal) {
 	EXPECT_TRUE(a_1 == b_1);
 
 	// 2. Different degrees
-	P a_2 = poly(3, { 42, -6, 8, 12 });
-	P b_2 = poly(2, { 42, -6, 8});
+	P a_2 = poly(3, { 31, 3, 8, 12 });
+	P b_2 = poly(2, { 31, 3, 8 });
 
 	EXPECT_TRUE(a_2 != b_2);
 
@@ -471,10 +490,17 @@ TEST(Operators, Equal) {
 	EXPECT_TRUE(a_3 != b_3);
 
 	// 4. Different factors
-	P a_4 = poly(3, { 42, -6, 8, 12 });
-	P b_4 = poly(3, { 42, 2, 8, -1 });
+	P a_4 = poly(3, { 2, -6, 8, 12 });
+	P b_4 = poly(3, { 2, 2, 8, -1 });
 
 	EXPECT_TRUE(a_4 != b_4);
+
+	// 5. Zero
+	P a_5 = poly(0, { 0 });
+	P b_5 = poly(3, { 42, 2, 8, -1 });
+
+	EXPECT_TRUE(a_5 == 0);
+	EXPECT_TRUE(b_5 != 0);
 }
 
 TEST(Operators, Value) {
