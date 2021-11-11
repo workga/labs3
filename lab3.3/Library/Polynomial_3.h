@@ -1,10 +1,8 @@
 #ifndef H_POLYNOMIAL
 #define H_POLYNOMIAL
 
-// 1) ccheck noexcept
 
-
-// static implementation without operators overloading
+// dynamic implementation with operators overloading
 class Polynomial_3 {
 public:
 	static const int MAX_DEG = 10;

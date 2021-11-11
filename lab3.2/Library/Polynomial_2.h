@@ -2,7 +2,7 @@
 #define H_POLYNOMIAL
 
 
-// static implementation without operators overloading
+// static implementation with operators overloading
 class Polynomial_2 {
 public:
 	static const int MAX_DEG = 10;
