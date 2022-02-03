@@ -6,6 +6,7 @@ Debug/
 Release/
 packages/
 .vs/
+SFML/
 
 framework.h
 pch.*
